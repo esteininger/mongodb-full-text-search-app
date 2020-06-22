@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# this file was used to import all clinical trial data from clinicaltrials.gov into a local MongoDB instance
+
 set -e
 set -x
 
@@ -13,7 +15,7 @@ unzip /tmp/AllPublicXML.zip -d /tmp/AllPublicXML
 # IMPORT to mongodb
 mongo --eval 'db.dropDatabase();' clintrials
 # rm /tmp/alltrials || true
-NUM_RECORDS=$(find /tmp/AllPublicXML -type f -name "*.xml" -exec /Users/ethan.steininger/.local/bin/xml-to-json --multiline {} + | tee  -a /tmp/alltrials | wc -l)
+NUM_RECORDS=$(find /tmp/AllPublicXML -type f -name "*.xml" -exec xml-to-json --multiline {} + | tee  -a /tmp/alltrials | wc -l)
 echo "[$NUM_RECORDS] processed... importing data into MongoDB"
 cat /tmp/alltrials | jq .clinical_study | mongoimport --uri $CONN_STR -c $COLL
 

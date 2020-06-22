@@ -61,14 +61,6 @@ def search():
 def index():
     return render_template("index.html")
 
-# {
-#   $search: {
-#     <operator>: {
-#       <specification(s)>
-#     }
-#   }
-# }
-
 
 if __name__ == '__main__':
     app.run(host="localhost", port=5010, debug=True)

@@ -30,20 +30,18 @@ def search():
                         'maxEdits': 2,
                         'prefixLength': 0
                     }
-                }
+                },
+                'highlight': { "path": path }
             }
         }, {
             '$project': {
-                # include entire document
                 'document': "$$ROOT",
+                'highlights': {"$meta": "searchHighlights"},
                 # include score
                 'score': {
                     '$meta': 'searchScore'
                 }
             }
-        },
-        {
-            '$replaceRoot': {'newRoot': "$document"}
         },
         {
             '$limit': 10

@@ -113,6 +113,15 @@
   .search-result .meta-search li > span{
     font-weight: 100;
   }
+
+  .highlight {
+    background-color: #a94442;
+    color: white;
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+
 </style>
 
 <html>
@@ -162,6 +171,7 @@
           url: `/search?query=${letters}&path=title`
         }).done(function(results){
           var jsonResults = JSON.parse(results).docs
+          console.log(jsonResults)
           render(letters, jsonResults)
         })
         .fail(function(err) {
@@ -171,6 +181,19 @@
     });
   }
 
+  function hightlightTitle(highlights_arr){
+    let txt = ``;
+
+    highlights_arr.texts.forEach(function(item) {
+      if (item.type == 'hit'){
+        txt += `<b><span class="highlight"> ${item.value} </span></b>`;
+      }
+      else {
+        txt += item.value;
+      }
+    });
+    return txt
+  }
 
 
   function render(letters, results) {
@@ -182,37 +205,38 @@
     // update search query
     $('#search-query').html(letters)
 
-
     let html = '';
     $.each(results, function(index, item) {
 
+      let doc = item.document;
+
       // skip items without poster
-      if (item.poster == undefined) {
+      if (doc.poster == undefined) {
         return true;
       }
 
       html += `
       <article class="search-result row">
         <div class="col-md-3">
-          <div class="thumbnail"><img src="${item.poster}" alt="Lorem ipsum" /></div>
+          <div class="thumbnail"><img src="${doc.poster}" alt="Lorem ipsum" /></div>
         </div>
         <div class="col-md-2">
           <ul class="meta-search">
-            <li>Released: <span>${item.year}</span></li>
-            <li>Length: <span>${item.runtime} mins</span></li>
-            <li>Rating: <span>${item.rated}</span></li>
+            <li>Released: <span>${doc.year}</span></li>
+            <li>Length: <span>${doc.runtime} mins</span></li>
+            <li>Rating: <span>${doc.rated}</span></li>
           </ul>
         </div>
         <div class="col-md-7 excerpet">
-          <h3>${item.title}</h3>
-          <p>${item.fullplot}</p>
+          <h3>${hightlightTitle(item.highlights[0])}</h3>
+          <p>${doc.fullplot}</p>
         </div>
         <span class="clearfix borda"></span>
       </article>
     `
-      placholder.append(html);
     });
-
+    // place in html
+    placholder.append(html);
   }
 
 

@@ -181,7 +181,7 @@
     });
   }
 
-  function hightlightTitle(highlights_arr){
+  function highlight(highlights_arr){
     let txt = ``;
 
     highlights_arr.texts.forEach(function(item) {
@@ -210,10 +210,10 @@
 
       let doc = item.document;
 
-      // skip items without poster
-      if (doc.poster == undefined) {
-        return true;
-      }
+      // // skip items without poster
+      // if (doc.poster == undefined) {
+      //   return true;
+      // }
 
       html += `
       <article class="search-result row">
@@ -228,8 +228,12 @@
           </ul>
         </div>
         <div class="col-md-7 excerpet">
-          <h3>${hightlightTitle(item.highlights[0])}</h3>
+          <h3>${highlight(item.highlights[0])}</h3>
+          <!-- <h3>${doc.title}</h3> -->
+
+          <!-- <p>${highlight(item.highlights[0])}</p> -->
           <p>${doc.fullplot}</p>
+          <p>Search score: ${item.score}</p>
         </div>
         <span class="clearfix borda"></span>
       </article>

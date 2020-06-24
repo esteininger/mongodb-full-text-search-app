@@ -26,11 +26,13 @@ def search():
                 'term': {
                     'query': query,
                     'path': path,
+                    # fuzzy search
                     'fuzzy': {
                         'maxEdits': 2,
                         'prefixLength': 0
                     }
                 },
+                # text highlighting
                 'highlight': { "path": path }
             }
         }, {
@@ -44,7 +46,11 @@ def search():
             }
         },
         {
-            '$limit': 10
+            # skip items without a poster image url
+            '$match': {"document.poster": {'$ne': None}}
+        },
+        {
+            '$limit': 15
         },
         {
             '$sort': {'score': -1}
